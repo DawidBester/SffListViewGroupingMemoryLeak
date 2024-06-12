@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SfListViewGroupingMemoryLeak.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:SfListViewGroupingMemoryLeak.Converters"
+    xmlns:extensions="clr-namespace:Syncfusion.Maui.DataSource.Extensions;assembly=Syncfusion.Maui.DataSource"
+    xmlns:listView="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+    xmlns:mtk="clr-namespace:MemoryToolkit.Maui;assembly=MemoryToolkit.Maui"
+    xmlns:viewModels1="using:SfListViewGroupingMemoryLeak.ViewModels"
+    mtk:LeakMonitorBehavior.Cascade="True"
+    x:DataType="viewModels1:BookInfoRepository">
+
+
+    <ContentPage.Resources>
+        <converters:GetGroupColor x:Key="GetGroupColor" />
+        <converters:GetBookName x:Key="GetBookName" />
+    </ContentPage.Resources>
+
+
+    <Grid HorizontalOptions="Fill" VerticalOptions="Fill" 
+          RowDefinitions="*">
+        <!--<Button Text="Close Page" TextColor="Black" BackgroundColor="Gold"
+                Clicked="BackButton_OnClicked"></Button>-->
+
+        <listView:SfListView Grid.Row="0"
+                             x:Name="BookInfoSfListView"
+                             AllowGroupExpandCollapse="True"
+                             AutoFitMode="DynamicHeight"
+                             BackgroundColor="Azure"
+                             IsStickyGroupHeader="True"
+                             IsStickyHeader="False"
+                             ItemSpacing="5"
+                             ItemsSource="{Binding BookInfoCollection}">
+
+            <listView:SfListView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="extensions:GroupResult">
+                    <Grid BackgroundColor="{Binding Items, Converter={StaticResource GetGroupColor}}" RowDefinitions="*,Auto">
+                        <Label
+                            Grid.Row="0"
+                            Margin="5"
+                            BackgroundColor="White"
+                            FontSize="20"
+                            HorizontalOptions="Center"
+                            Text="{Binding Key, Converter={x:StaticResource GetBookName}}"
+                            TextColor="Black"
+                            VerticalOptions="Center" />
+                        <!--<Button Grid.Row="1" Text="Show/>Hide" Clicked="Button_OnClicked" CommandParameter="{Binding Key}"/>-->
+                    </Grid>
+                </DataTemplate>
+            </listView:SfListView.GroupHeaderTemplate>
+            <listView:SfListView.ItemTemplate>
+                <!--  IsVisible="{Binding IsExpanded}"  -->
+                <DataTemplate x:DataType="viewModels1:BookInfo">
+                    <Grid
+                        HorizontalOptions="Fill"
+                        RowDefinitions="Auto,Auto"
+                        VerticalOptions="Fill">
+                        <!--<Label Text="Some random text" HeightRequest="100" BackgroundColor="CornflowerBlue" />-->
+
+                        <listView:SfListView
+                            x:Name="BookInfoSfListView"
+                            Grid.Row="1"
+                            AutoFitMode="DynamicHeight"
+                            BackgroundColor="Azure"
+                            IsScrollingEnabled="False"
+                            ItemSpacing="5"
+                            ItemsSource="{Binding SubBookInfoCollection}">
+                            <listView:SfListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid
+                                        BackgroundColor="{Binding CategoryColor}"
+                                        HorizontalOptions="Fill"
+                                        RowDefinitions="Auto,Auto,Auto"
+                                        VerticalOptions="Fill">
+                                        <Label
+                                            Grid.Row="0"
+                                            BackgroundColor="{Binding CategoryColor}"
+                                            FontSize="20"
+                                            HeightRequest="100"
+                                            Text="{Binding Category}"
+                                            TextColor="Black" />
+
+                                        <Label
+                                            Grid.Row="1"
+                                            FontSize="20"
+                                            HeightRequest="100"
+                                            Text="{Binding BookName}"
+                                            TextColor="Black" />
+
+                                        <Label
+                                            Grid.Row="2"
+                                            FontSize="15"
+                                            HeightRequest="100"
+                                            HorizontalOptions="Fill"
+                                            Text="{Binding BookDescription}"
+                                            TextColor="Black"
+                                            VerticalOptions="Fill" />
+
+                                    </Grid>
+                                </DataTemplate>
+                            </listView:SfListView.ItemTemplate>
+
+                        </listView:SfListView>
+
+                    </Grid>
+                    <!--<Grid RowDefinitions="*,Auto">
+                    -->
+                    <!--
+                        BackgroundColor="{Binding CategoryColor}"
+                        <Label
+                            Grid.Row="0"
+                            BackgroundColor="{Binding CategoryColor}"
+                            FontSize="20"
+                            Text="{Binding Category}"
+                            TextColor="Black" />-->
+                    <!--
+                        <Label
+                            Grid.Row="0"
+                            FontSize="20"
+                            Text="{Binding BookName}"
+                            TextColor="Black" />
+
+                        <Label
+                            Grid.Row="1"
+                            FontSize="15"
+                            HorizontalOptions="Fill"
+                            Text="{Binding BookDescription}"
+                            TextColor="Black"
+                            VerticalOptions="Fill" />
+
+                    </Grid>-->
+                </DataTemplate>
+            </listView:SfListView.ItemTemplate>
+        </listView:SfListView>
+
+    </Grid>
+
+</ContentPage>
